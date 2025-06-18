@@ -10,6 +10,10 @@ load_dotenv()
  # Importing psycopg2 to connect to PostgreSQL
 import psycopg2
 
+import pickle
+import numpy as np
+
+
 host= os.getenv("host")
 port= os.getenv("port")
 database= os.getenv("database")
@@ -45,3 +49,16 @@ def read_postgres_data():
    except Exception as e:
        raise CustomException(e, sys) from e
        logging.error(f"Error in reading data from PostgreSQL: {e}")
+       
+def save_object(file_path, obj):
+      try:
+          dir_path = os.path.dirname(file_path)
+          os.makedirs(dir_path, exist_ok=True)
+          
+          with open(file_path, 'wb') as file_obj:
+              pickle.dump(obj, file_obj)
+              
+          logging.info(f"Object saved at {file_path}")
+      except Exception as e:
+          logging.error(f"Error saving object at {file_path}: {e}")
+          raise CustomException(e, sys) from e
